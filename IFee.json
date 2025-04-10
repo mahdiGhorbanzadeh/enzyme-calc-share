@@ -1,0 +1,84 @@
+{
+    "abi": [
+        {
+            "inputs": [
+                {
+                    "internalType": "enum IFeeManager.FeeHook",
+                    "name": "_hook",
+                    "type": "uint8"
+                }
+            ],
+            "name": "settlesOnHook",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "settles_",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool", 
+                    "name": "usesGav_",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+              {
+                "name": "_comptrollerProxy",
+                "type": "address"
+              }
+            ],
+            "name": "getFeeInfoForFund",
+            "outputs": [
+              {
+                "components": [
+                  {
+                    "name": "scaledPerSecondRate",
+                    "type": "uint128"
+                  },
+                  {
+                    "name": "lastSettled",
+                    "type": "uint128"
+                  }
+                ],
+                "name": "feeInfo_",
+                "type": "tuple"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_comptrollerProxy",
+                    "type": "address"
+                }
+            ],
+            "name": "getFeeInfoForFund",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "name": "rate",
+                            "type": "uint256"
+                        },
+                        {
+                            "name": "highWaterMark", 
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "feeInfo_",
+                    "type": "tuple"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}

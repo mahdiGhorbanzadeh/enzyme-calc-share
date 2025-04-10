@@ -1,0 +1,23 @@
+{
+    "abi": [
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_comptrollerProxy",
+                    "type": "address"
+                }
+            ],
+            "name": "getEnabledFeesForFund",
+            "outputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "fees_",
+                    "type": "address[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}

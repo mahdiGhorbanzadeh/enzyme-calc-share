@@ -1,0 +1,54 @@
+{
+    "abi": [
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_investmentAmount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256", 
+                    "name": "_minSharesQuantity",
+                    "type": "uint256"
+                }
+            ],
+            "name": "buyShares",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "sharesReceived_",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "external",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "calcGav",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gav_",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "public",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getVaultProxy",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "vaultProxy_",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}

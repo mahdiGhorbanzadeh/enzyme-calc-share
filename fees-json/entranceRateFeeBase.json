@@ -1,0 +1,48 @@
+{
+    "abi": [
+        {
+            "inputs": [
+                {
+                    "internalType": "enum IFeeManager.FeeHook",
+                    "name": "_hook",
+                    "type": "uint8"
+                }
+            ],
+            "name": "settlesOnHook",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "settles_",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool", 
+                    "name": "usesGav_",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_comptrollerProxy",
+                    "type": "address"
+                }
+            ],
+            "name": "getRateForFund",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "rate_",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}
+

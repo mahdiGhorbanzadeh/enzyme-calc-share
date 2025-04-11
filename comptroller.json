@@ -49,6 +49,19 @@
             ],
             "stateMutability": "view",
             "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getDenominationAsset",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "denominationAsset_",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
         }
     ]
 }

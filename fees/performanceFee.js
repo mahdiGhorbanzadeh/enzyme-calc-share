@@ -29,21 +29,17 @@ async function settle(_comptrollerAddress, _vaultAddress,specificFeeContract,_ga
 async function calcSharesDue(_comptrollerProxy, _vaultProxy, _gav,_sharesSupply,_feeInfo) {
 
     if (_gav.eq("0")) {
-        return;
+        return { sharesDue: new BN("0"), settlementType: SettlementType.None };
     }
 
     if (_sharesSupply.eq("0")) {
-        return;
+        return { sharesDue: new BN("0"), settlementType: SettlementType.None };
     }
 
     const sharePrice = calcGrossShareValue(_gav, _sharesSupply);
 
-    console.log("----------------------------------");
-    console.log("loghereeeeeeeeeeeeeeeee ");
-    console.log("----------------------------------");
-    
     if (new BN(sharePrice.toString()).lte(new BN(_feeInfo.highWaterMark.toString()))) {
-        return;
+        return { sharesDue: new BN("0"), settlementType: SettlementType.None };
     }
 
     // Calculate the shares due, inclusive of inflation
@@ -75,6 +71,7 @@ function calcGrossShareValue(_gav, _sharesSupply) {
     if (_sharesSupply.eq("0")) {
         return SHARE_UNIT;
     }
+    
     return new BN(_gav.toString()).mul(new BN(SHARE_UNIT.toString())).div(new BN(_sharesSupply.toString()));
 }
 

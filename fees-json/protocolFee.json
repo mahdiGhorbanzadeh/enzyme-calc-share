@@ -1,12 +1,18 @@
 {
     "abi": [
         {
-            "inputs": [],
-            "name": "totalSupply",
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_vaultProxy",
+                    "type": "address"
+                }
+            ],
+            "name": "getLastPaidForVault",
             "outputs": [
                 {
                     "internalType": "uint256",
-                    "name": "totalSupply_",
+                    "name": "lastPaid_",
                     "type": "uint256"
                 }
             ],
@@ -17,35 +23,20 @@
             "inputs": [
                 {
                     "internalType": "address",
-                    "name": "_account", 
+                    "name": "_vaultProxy",
                     "type": "address"
                 }
             ],
-            "name": "balanceOf",
+            "name": "getFeeBpsForVault",
             "outputs": [
                 {
                     "internalType": "uint256",
-                    "name": "balanceOf_",
+                    "name": "feeBps_",
                     "type": "uint256"
                 }
             ],
             "stateMutability": "view",
             "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "decimals",
-            "outputs": [
-                {
-                    "internalType": "uint8",
-                    "name": "decimals_",
-                    "type": "uint8"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
         }
-
-
     ]
 }

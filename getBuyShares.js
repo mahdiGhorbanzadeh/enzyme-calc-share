@@ -2,6 +2,8 @@ const ethers = require("ethers");
 
 const BN = require("bn.js");
 
+require("dotenv").config();
+
 //--------------- common abi section ---------------
 const comptroller = require("./comptroller.json");
 const feeManager = require("./feeManager.json");
@@ -28,13 +30,11 @@ const SHARES_UNIT = new BN("1000000000000000000");
 
 //--------------- provider section ---------------
 
-const provider = new ethers.providers.JsonRpcProvider(
-  "https://eth-mainnet.g.alchemy.com/v2/kqgkrVW6bE-5gWKYcTnMwSCfoXLGYxSR"
-); // Replace with your RPC URL
+const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL); // Replace with your RPC URL
 
-const comptrollerAddress = "0xa52a8ee6b539eea273f67a722c10e2b908cf3b61"; //"0xa0bc8040cb1314542b58989fd54a78620d23895c";
-const feeManagerAddress = "0xaf0dffac1ce85c3fce4c2bf50073251f615eefc4";
-const protocolFeeAddress = "0xe97980f1d43c4cd4f1eef0277a2dea7ddbc2cd13";
+const comptrollerAddress = "0x3f5b984a726c30e29db939438b6b10357c76537f"; //"0xa0bc8040cb1314542b58989fd54a78620d23895c";
+const feeManagerAddress = "0xddd7432671f5adc1c82c7c875624c1b0bc461deb";
+const protocolFeeAddress = "0xb8e6eda0ce8fddd21f0b0268a43a57b9296e23d5";
 
 const FeeHook = {
   Continuous: 0,
@@ -44,12 +44,12 @@ const FeeHook = {
 };
 
 const preBuySharesFeeAddresses = {
-  managementFee: "0xFaF2c3DB614E9d38fE05EDc634848BE7Ff0542B9",
-  performanceFee: "0xfeDC73464Dfd156d30F6524654a5d56E766DA0c3",
+  managementFee: "0x97F13B3040A565be791D331B0edd4b1b58dBD843",
+  performanceFee: "0xBC63AfE28C66a6279BD3A55A4d0D3Ab61f479BDf",
 };
 
 const postBuySharesFeeAddresses = {
-  entranceRateFee: "0xFb8DF7D5e320020Cd8047226b81cf6d68F3E3C19",
+  entranceRateFee: "0x88c9a11c7bB8bC274388d0db864ab87C14fb78B8",
 };
 
 async function calculateShares(investmentAmount, minSharesQuantity) {
@@ -98,10 +98,6 @@ async function _checkFeeManager(_gav, comptrollerContract, investment) {
   );
 
   console.log("----------------------------------");
-  console.log("sharesSupply before", sharesSupply);
-  console.log("----------------------------------");
-
-  console.log("----------------------------------");
   console.log("fees ", fees);
   console.log("----------------------------------");
 
@@ -129,10 +125,15 @@ async function _checkFeeManager(_gav, comptrollerContract, investment) {
           valutAddress,
           specificFeeContract,
           ValutContract,
-          sharesSupply
+          sharesSupply,
+          provider
         );
 
         if (settlementType && settlementType === SettlementType.Mint) {
+          console.log("----------------------------------");
+          console.log("sharesDue managementFee ", sharesDue.toString());
+          console.log("----------------------------------");
+
           sharesSupply = sharesSupply.add(new BN(sharesDue.toString()));
         }
       } else if (
@@ -147,14 +148,14 @@ async function _checkFeeManager(_gav, comptrollerContract, investment) {
         );
 
         if (settlementType && settlementType === SettlementType.Mint) {
+          console.log("----------------------------------");
+          console.log("sharesDue performanceFee ", sharesDue.toString());
+          console.log("----------------------------------");
+
           sharesSupply = sharesSupply.add(new BN(sharesDue.toString()));
         }
       }
     }
-
-    console.log("----------------------------------");
-    console.log("sharesSupply after", sharesSupply.toString());
-    console.log("----------------------------------");
   }
 
   //---------------- protocolFee section ----------------
@@ -172,6 +173,10 @@ async function _checkFeeManager(_gav, comptrollerContract, investment) {
   );
 
   if (settlementType && settlementType === SettlementType.Mint) {
+    console.log("----------------------------------");
+    console.log("sharesDue protocolFee ", sharesDue.toString());
+    console.log("----------------------------------");
+
     sharesSupply = sharesSupply.add(new BN(sharesDue.toString()));
   }
 
@@ -195,17 +200,9 @@ async function _checkFeeManager(_gav, comptrollerContract, investment) {
     new BN("10").pow(new BN(denominationAssetUnit.toString()))
   );
 
-  console.log("----------------------------------");
-  console.log("sharePrice ", sharePrice.toString());
-  console.log("----------------------------------");
-
   let sharesIssued = new BN(investment.toString())
     .mul(SHARES_UNIT)
     .div(new BN(sharePrice.toString()));
-
-  console.log("----------------------------------");
-  console.log("sharesIssued ", sharesIssued.toString());
-  console.log("----------------------------------");
 
   //---------------- postBuyShares section ----------------
 
@@ -228,14 +225,20 @@ async function _checkFeeManager(_gav, comptrollerContract, investment) {
       console.log("----------------------------------");
 
       if (specificFeeAddress === postBuySharesFeeAddresses.entranceRateFee) {
-        let { newSharesIssued, settlementType } = await entranceRateFee.settle(
+        let { sharesDue, settlementType } = await entranceRateFee.settle(
           comptrollerAddress,
           specificFeeContract,
           sharesIssued
         );
 
         if (settlementType && settlementType === SettlementType.Direct) {
-          sharesIssued = newSharesIssued;
+          console.log("----------------------------------");
+          console.log("sharesDue entranceRateFee ", sharesDue.toString());
+          console.log("----------------------------------");
+
+          console.log("sharesIssued before", sharesIssued.toString());
+
+          sharesIssued = sharesIssued.sub(new BN(sharesDue.toString()));
         }
       }
     }
@@ -274,7 +277,7 @@ function getPostBuySharesFeeAbi(address) {
 
 // Example usage
 (async () => {
-  const investment = new BN("10000000"); // Example: 1 ETH
+  const investment = new BN("180"); // Example: 1 ETH
   const minShares = 1; // Minimum shares quantity
   await calculateShares(investment, minShares);
 })();

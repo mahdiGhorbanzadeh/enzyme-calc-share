@@ -1,24 +1,34 @@
-const BN = require('bn.js');
-const ONE_HUNDRED_PERCENT = new BN("10000"); 
-const { SettlementType } = require('./enum');
+const BN = require("bn.js");
+const ONE_HUNDRED_PERCENT = new BN("10000");
+const { SettlementType } = require("./enum");
 
+async function settle(
+  _comptrollerAddress,
+  _specificFeeContract,
+  _sharesIssued
+) {
+  let rate = await _specificFeeContract.callStatic.getRateForFund(
+    _comptrollerAddress
+  );
 
-async function settle(_comptrollerAddress,_specificFeeContract,_sharesIssued) {
+  console.log("----------------------------------");
+  console.log("rate ", rate.toString());
+  console.log("----------------------------------");
 
-    let rate = await _specificFeeContract.callStatic.getRateForFund(_comptrollerAddress);
+  const sharesDue = _sharesIssued
+    .mul(new BN(rate.toString()))
+    .div(ONE_HUNDRED_PERCENT);
 
-    const newSharesIssued = _sharesIssued.mul(new BN(rate.toString())).div(ONE_HUNDRED_PERCENT);
+  console.log("----------------------------------");
+  console.log("sharesDue ", sharesDue.toString());
+  console.log("----------------------------------");
 
-    console.log("----------------------------------");
-    console.log("newSharesIssued ", newSharesIssued.toString());
-    console.log("----------------------------------");
-
-    return {
-        newSharesIssued,
-        settlementType: SettlementType.Direct
-    };
+  return {
+    sharesDue,
+    settlementType: SettlementType.Direct,
+  };
 }
 
 module.exports = {
-    settle
-}
+  settle,
+};

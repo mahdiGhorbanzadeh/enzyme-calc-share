@@ -32,16 +32,10 @@ const SHARES_UNIT = new BN("1000000000000000000");
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL); // Replace with your RPC URL
 
-const comptrollerAddress = "0x3f5b984a726c30e29db939438b6b10357c76537f"; //"0xa0bc8040cb1314542b58989fd54a78620d23895c";
+const comptrollerAddress = "0x3f5b984a726c30e29db939438b6b10357c76537f";
 const feeManagerAddress = "0xddd7432671f5adc1c82c7c875624c1b0bc461deb";
 const protocolFeeAddress = "0xb8e6eda0ce8fddd21f0b0268a43a57b9296e23d5";
 
-const FeeHook = {
-  Continuous: 0,
-  PreBuyShares: 1,
-  PostBuyShares: 2,
-  PreRedeemShares: 3,
-};
 
 const preBuySharesFeeAddresses = {
   managementFee: "0x97F13B3040A565be791D331B0edd4b1b58dBD843",

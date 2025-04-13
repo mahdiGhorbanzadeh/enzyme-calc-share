@@ -1,4 +1,4 @@
-const ethers = require("ethers");
+import { ethers } from "ethers";
 
 const BN = require("bn.js");
 
@@ -52,7 +52,7 @@ const postBuySharesFeeAddresses = {
   entranceRateFee: "0x88c9a11c7bB8bC274388d0db864ab87C14fb78B8",
 };
 
-async function calculateShares(investmentAmount, minSharesQuantity) {
+async function calculateShares(investmentAmount:bigint) {
   try {
     const comptrollerContract = new ethers.Contract(
       comptrollerAddress,
@@ -72,7 +72,7 @@ async function calculateShares(investmentAmount, minSharesQuantity) {
   }
 }
 
-async function _checkFeeManager(_gav, comptrollerContract, investment) {
+async function _checkFeeManager(_gav:bigint, comptrollerContract:ethers.Contract, investment:bigint) {
   const feeManagerContract = new ethers.Contract(
     feeManagerAddress,
     feeManager.abi,
@@ -249,7 +249,7 @@ async function _checkFeeManager(_gav, comptrollerContract, investment) {
   console.log("----------------------------------");
 }
 
-function calcGrossShareValue(_gav, _sharesSupply, _denominationAssetUnit) {
+function calcGrossShareValue(_gav:bigint, _sharesSupply:bigint, _denominationAssetUnit:bigint) {
   let sharesSupply = new BN(_sharesSupply.toString());
   let gav = new BN(_gav.toString());
   let denominationAssetUnit = new BN(_denominationAssetUnit.toString());
@@ -261,7 +261,7 @@ function calcGrossShareValue(_gav, _sharesSupply, _denominationAssetUnit) {
   return gav.mul(SHARES_UNIT).div(sharesSupply);
 }
 
-function getPreBuySharesFeeAbi(address) {
+function getPreBuySharesFeeAbi(address:string) {
   if (address === preBuySharesFeeAddresses.managementFee) {
     return managementFeeAbi.abi;
   } else if (address === preBuySharesFeeAddresses.performanceFee) {
@@ -269,7 +269,7 @@ function getPreBuySharesFeeAbi(address) {
   }
 }
 
-function getPostBuySharesFeeAbi(address) {
+function getPostBuySharesFeeAbi(address:string) {
   if (address === postBuySharesFeeAddresses.entranceRateFee) {
     return entranceRateFeeAbi.abi;
   }
@@ -277,7 +277,6 @@ function getPostBuySharesFeeAbi(address) {
 
 // Example usage
 (async () => {
-  const investment = new BN("180"); // Example: 1 ETH
-  const minShares = 1; // Minimum shares quantity
-  await calculateShares(investment, minShares);
+  const investment = new BN("1000000");
+  await calculateShares(investment);
 })();

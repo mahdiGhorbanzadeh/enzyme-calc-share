@@ -1,14 +1,14 @@
+import { ethers } from "ethers";
+import { SettlementType } from "./enum";
 
-const { BN } = require('bn.js');
-const ethers = require('ethers');
-const { SettlementType } = require('./enum');
+const BN = require("bn.js");
 
 const SECONDS_IN_YEAR = new BN("31557600");
 const MAX_BPS = new BN("10000");
 
 
 
-async function payFee(_protocolFeeContract,_vaultProxy,_sharesSupply) {
+export async function payFee(_protocolFeeContract:ethers.Contract,_vaultProxy:string,_sharesSupply:any) {
 
     let lastPaid = new BN((await _protocolFeeContract.getLastPaidForVault(_vaultProxy)).toString());
 
@@ -46,10 +46,10 @@ async function payFee(_protocolFeeContract,_vaultProxy,_sharesSupply) {
 }
 
 
-function calcSharesDueForVault(_sharesSupply,_feeBps,_secondsDue) {
-    sharesSupply = new BN(_sharesSupply.toString());
-    feeBps = new BN(_feeBps.toString());
-    secondsDue = new BN(_secondsDue.toString());
+function calcSharesDueForVault(_sharesSupply:any,_feeBps:any,_secondsDue:any) {
+    let sharesSupply = new BN(_sharesSupply.toString());
+    let feeBps = new BN(_feeBps.toString());
+    let secondsDue = new BN(_secondsDue.toString());
 
     const rawSharesDue = sharesSupply
         .mul(feeBps)
@@ -66,8 +66,4 @@ function calcSharesDueForVault(_sharesSupply,_feeBps,_secondsDue) {
     const sharesDue = rawSharesDue.mul(sharesSupply).div(supplyNetRawSharesDue);
 
     return sharesDue;
-}
-
-module.exports = {
-    payFee
 }

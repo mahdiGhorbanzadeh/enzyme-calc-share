@@ -1,11 +1,14 @@
+import { ethers } from "ethers";
+import { SettlementType } from "./enum";
+
 const BN = require("bn.js");
 const ONE_HUNDRED_PERCENT = new BN("10000");
-const { SettlementType } = require("./enum");
 
-async function settle(
-  _comptrollerAddress,
-  _specificFeeContract,
-  _sharesIssued
+
+export async function settle(
+  _comptrollerAddress:string,
+  _specificFeeContract:ethers.Contract,
+  _sharesIssued:any
 ) {
   let rate = await _specificFeeContract.callStatic.getRateForFund(
     _comptrollerAddress
@@ -28,7 +31,3 @@ async function settle(
     settlementType: SettlementType.Direct,
   };
 }
-
-module.exports = {
-  settle,
-};

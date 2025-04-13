@@ -1,14 +1,17 @@
+import { ethers } from "ethers";
+import { SettlementType } from "./enum";
+
 const BN = require("bn.js");
-const { SettlementType } = require("./enum");
+
 const RATE_SCALE_BASE = new BN("1000000000000000000000000000");
 
-async function settle(
-  comptrollerAddress,
-  vaultAddress,
-  specificFeeContract,
-  ValutContract,
-  _sharesSupply,
-  _provider
+export async function settle(
+  comptrollerAddress:string,
+  vaultAddress:string,
+  specificFeeContract:ethers.Contract,
+  ValutContract:ethers.Contract,
+  _sharesSupply:any,
+  _provider:ethers.providers.Provider
 ) {
   const feeInfo = await specificFeeContract.callStatic.getFeeInfoForFund(
     comptrollerAddress
@@ -76,7 +79,7 @@ async function settle(
   }
 }
 
-const rpow = (x, n, base) => {
+const rpow = (x:any, n:any, base:any) => {
   x = new BN(x.toString());
 
   n = new BN(n.toString());
@@ -117,8 +120,4 @@ const rpow = (x, n, base) => {
   }
 
   return z;
-};
-
-module.exports = {
-  settle,
 };

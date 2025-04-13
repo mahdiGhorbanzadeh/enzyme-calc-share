@@ -1,7 +1,7 @@
+import { ethers } from "ethers";
+import { SettlementType } from "./enum";
 
-const { BN } = require('bn.js');
-const ethers = require('ethers');
-const { SettlementType } = require('./enum');
+const BN = require("bn.js");
 
 
 const ONE_HUNDRED_PERCENT = new BN("10000");
@@ -10,7 +10,7 @@ const ONE_HUNDRED_PERCENT = new BN("10000");
 const SHARE_UNIT = new BN("1000000000000000000");
 
 
-async function settle(_comptrollerAddress, _vaultAddress,specificFeeContract,_gav,_sharesSupply) {
+export async function settle(_comptrollerAddress:string, _vaultAddress:string,specificFeeContract:ethers.Contract,_gav:any,_sharesSupply:any) {
     
     let gav = new BN(_gav.toString());
     let sharesSupply = new BN(_sharesSupply.toString());
@@ -21,12 +21,12 @@ async function settle(_comptrollerAddress, _vaultAddress,specificFeeContract,_ga
     console.log("feeInfo ", feeInfo);
     console.log("----------------------------------");
 
-    return await calcSharesDue(_comptrollerAddress, _vaultAddress, gav,sharesSupply,feeInfo);
+    return await calcSharesDue(gav,sharesSupply,feeInfo);
 
 }
 
 
-async function calcSharesDue(_comptrollerProxy, _vaultProxy, _gav,_sharesSupply,_feeInfo) {
+async function calcSharesDue(_gav:any,_sharesSupply:any,_feeInfo:any) {
 
     if (_gav.eq("0")) {
         return { sharesDue: new BN("0"), settlementType: SettlementType.None };
@@ -67,14 +67,10 @@ async function calcSharesDue(_comptrollerProxy, _vaultProxy, _gav,_sharesSupply,
     return { sharesDue, settlementType: SettlementType.Mint };
 }
 
-function calcGrossShareValue(_gav, _sharesSupply) {
+function calcGrossShareValue(_gav:any, _sharesSupply:any) {
     if (_sharesSupply.eq("0")) {
         return SHARE_UNIT;
     }
     
     return new BN(_gav.toString()).mul(new BN(SHARE_UNIT.toString())).div(new BN(_sharesSupply.toString()));
-}
-
-module.exports = {
-    settle
 }
